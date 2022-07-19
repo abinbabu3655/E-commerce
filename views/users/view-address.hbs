@@ -1,0 +1,239 @@
+<section style="background-color: #eee;" class="pt-5">
+    <div class="container pt-5 py-5">
+
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                            alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                        <h5 class="my-3">{{user.name}}</h5>
+
+
+                    </div>
+                </div>
+                <div class="card mb-4 mb-lg-0">
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush rounded-3">
+                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                                <a class="" href="/orders">Orders</a>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                                <a href="/user-address">Address</a>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                                <a href="/change-password">Change Password</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Addresses</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                {{!-- <span aria-hidden="true">&times;</span> --}}
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="">
+                                <a href="" data-toggle="modal" data-target="#add-address">Add new address +</a>
+                                <hr>
+                            </div>
+                            {{#each Addresses}}
+                            <div class="card" style="width: 51em;">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted">{{this.addresses.fName}}
+                                        {{this.addresses.lName}}
+                                    </h6>
+                                    <p>Mobile : {{this.addresses.number}}</p>
+                                    <p>Email : {{this.addresses.email}},</p>
+                                    <p>Add :
+                                        {{this.addresses.add1}},{{this.addresses.add2}},{{this.addresses.city}},{{this.addresses.district}},{{this.addresses.state}}
+                                    </p>
+                                    <p>Pincode :{{this.addresses.zip}}</p>
+                                    <div class="d-flex justify-content-around"></div>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                        data-target="#edit-address{{this.addresses._id}}">Edit</button>
+                                    <button type="button" class="btn btn-primary"
+                                        onclick="deleteAddress('{{this.addresses._id}}','{{this._id}}')">Delete</button>
+                                </div>
+                            </div>
+                            <br>
+                            {{/each}}
+
+                            {{!-- <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div> --}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+</section>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="add-address" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Address</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12">
+                    <form class="row contact_form" action='/add-address/{{user._id}}' method="post" id="add-addresss">
+                        <div class="col-md-6 form-group">
+                            <input type="text" class="form-control" id="first" name="fName" placeholder="First name" />
+
+                        </div>
+                        <div class="col-md-6 form-group p_star">
+                            <input type="text" class="form-control" id="last" name="lName" placeholder="Last name" />
+
+                        </div>
+                        <div class="col-md-6 form-group p_star">
+                            <input type="text" class="form-control" id="number" name="number"
+                                placeholder="Mobile number" />
+
+                        </div>
+                        <div class="col-md-6 form-group p_star">
+                            <input type="text" class="form-control" id="email" name="email"
+                                placeholder="Email Address" />
+
+                        </div>
+
+                        <div class="col-md-12 form-group p_star">
+                            <input type="text" class="form-control" id="add1" name="add1"
+                                placeholder="Address line 01" />
+
+                        </div>
+                        <div class="col-md-12 form-group p_star">
+                            <input type="text" class="form-control" id="add2" name="add2"
+                                placeholder="Address line 02" />
+
+                        </div>
+                        <div class="col-md-12 form-group p_star">
+                            <input type="text" class="form-control" id="city" name="city" placeholder="Town/City" />
+
+                        </div>
+                        <div class="col-md-6 form-group p_star">
+                            <input type="text" class="form-control" id="district" name="district"
+                                placeholder="District" />
+
+                        </div>
+                        <div class="col-md-6 form-group p_star">
+                            <input type="text" class="form-control" id="state" name="state" placeholder="State" />
+
+                        </div>
+
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="zip" name="zip" placeholder="Postcode/ZIP" />
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" form="add-addresss">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Modal -->
+{{#each Addresses}}
+<div class="modal fade" id="edit-address{{this.addresses._id}}" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Address</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-body">
+                    <div class="col-lg-12">
+                        <form class="row contact_form" action="/edit-address/{{this.addresses._id}}" method="post"
+                            id="edit-addresss{{this.addresses._id}}">
+                            <input type="text" name="userId" id="" value="{{this._id}}" hidden>
+                            <div class="col-md-6 form-group">
+                                <input type="text" class="form-control" id="first" name="fName"
+                                    value="{{addresses.fName}}" />
+
+                            </div>
+                            <div class="col-md-6 form-group p_star">
+                                <input type="text" class="form-control" id="last" name="lName"
+                                    value="{{addresses.lName}}" />
+
+                            </div>
+                            <div class="col-md-6 form-group p_star">
+                                <input type="text" class="form-control" id="number" name="number"
+                                    value="{{addresses.number}}" />
+
+                            </div>
+                            <div class="col-md-6 form-group p_star">
+                                <input type="text" class="form-control" id="email" name="email"
+                                    value="{{addresses.email}}" />
+
+                            </div>
+
+                            <div class="col-md-12 form-group p_star">
+                                <input type="text" class="form-control" id="add1" name="add1"
+                                    value="{{addresses.add1}}" />
+
+                            </div>
+                            <div class="col-md-12 form-group p_star">
+                                <input type="text" class="form-control" id="add2" name="add2"
+                                    value="{{addresses.add2}}" />
+
+                            </div>
+                            <div class="col-md-12 form-group p_star">
+                                <input type="text" class="form-control" id="city" name="city"
+                                    value="{{addresses.city}}" />
+
+                            </div>
+                            <div class="col-md-6 form-group p_star">
+                                <input type="text" class="form-control" id="district" name="district"
+                                    value="{{addresses.district}}" />
+
+                            </div>
+                            <div class="col-md-6 form-group p_star">
+                                <input type="text" class="form-control" id="state" name="state"
+                                    value="{{addresses.state}}" />
+
+                            </div>
+
+                            <div class="col-md-12 form-group">
+                                <input type="text" class="form-control" id="zip" name="zip" value="{{addresses.zip}}" />
+                            </div>
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" form="edit-addresss{{this.addresses._id}}">Save
+                    changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{/each}}

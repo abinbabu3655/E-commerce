@@ -1,0 +1,90 @@
+<section class="cart_area padding_top" style="background-color:#ecfdff;">
+  <div class="container ">
+    <div class="cart_inner ">
+      <div class="table-responsive "
+        style="background-color: #DBDFFD; border: 20px; border-radius:20px ; border-color: #fff;">
+        {{#if products}}
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Product</th>
+              <th scope="col">Price</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Subtotal</th>
+              {{!-- <th scope="col">SubTotal</th> --}}
+            </tr>
+          </thead>
+          <tbody>
+            {{#each subTotal}}
+            <tr>
+              <td class="d-flex" style="margin-left:50px ;">
+                <div class="media d-flex ">
+                  <div class="d-flex ">
+                    <img src="/product-images/{{this.product._id}}.jpg" alt="" style="width: 10em; height: 10em;" />
+                  </div>
+                  <div class="media-body">
+                    <p>{{this.product.productName}}</p>
+                  </div>
+                </div>
+              </td>
+
+              <td>
+                <h5>&#8360; {{this.product.price}}</h5>
+              </td>
+              <td style="text-align: center;">
+                <div class="product_count">
+                  <button class="cart-item-count mr-4  btn btn-info"
+                    onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user._id}}',-1)">-</button>
+                  <span style="width: 5em;" id="{{this.product._id}}">{{this.quantity}}</span><button
+                    class="cart-item-count ml-4 btn btn-info"
+                    onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user._id}}',1)">+</button>
+                </div>
+              </td>
+              
+              <td style="text-align: center;">
+                <span id="subTotal">{{this.Subtotal}}</span>
+                {{/each}}
+                
+                
+              </td>
+              
+              
+              {{!-- <td>
+                <h5>-st</h5>
+              </td> --}}
+            </tr>
+
+            
+
+            <tr>
+              <td></td>
+              <td></td>
+              <td>
+                <h5>Grand Total</h5>
+              </td>
+              <td>
+                <span id="total" class="font-weight-bold">{{total}}</span>
+              </td>
+
+            </tr>
+            {{else}}
+            <div class="d">
+              <p class="d-flex justify-content-center pt-5 mt-5 text-danger ">Cart is Empty</p>
+            </div>
+
+            {{/if}}
+
+          </tbody>
+        </table>
+
+
+        <div class="checkout_btn_inner float-right pb-5 p-3">
+          <a class="btn_1" href="/shop">Continue Shopping</a>
+          {{#if products}}
+          <a class="btn_1 checkout_btn_1" href="/place-order">Proceed to checkout</a>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+</section>
+<!--================End Cart Area =================-->

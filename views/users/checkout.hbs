@@ -1,0 +1,331 @@
+<!--================Checkout Area =================-->
+<section class="checkout_area padding_top">
+    <div class="container">
+        <div class="returning_customer">
+        </div>
+        <div class="cupon_area">
+            <div class="check_title">
+                <h2>Apply Coupon
+                    {{!-- Have a coupon?
+                    <a href="#">Click here to enter your code</a> --}}
+                </h2>
+            </div>
+            <input type="text" placeholder="Enter coupon code" />
+            <a class="tp_btn" href="#">Apply Coupon</a>
+        </div>
+
+        <div class="billing_details">
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <h3>Shipping Address
+                    </h3>
+                    <button type="button" class="tp_btn mb-3 ml-3" data-toggle="modal" data-target="#exampleModal">
+                        Saved Addresses
+                    </button>
+                    <form class="row contact_form" novalidate="novalidate" id="checkout-form">
+                        <div class="col-md-6 form-group">
+                            <input type="text" class="form-control" id="first" name="fName" placeholder="First name" />
+
+                        </div>
+                        <div class="col-md-6 form-group p_star">
+                            <input type="text" class="form-control" id="last" name="lName" placeholder="Last name" />
+
+                        </div>
+                        <div class="col-md-6 form-group p_star">
+                            <input type="number" class="form-control" id="number" name="mobile"
+                                placeholder="Mobile number" />
+
+                        </div>
+                        <div class="col-md-6 form-group p_star">
+                            <input type="email" class="form-control" id="email" name="email"
+                                placeholder="Email Address" />
+
+                        </div>
+                        {{!-- <div class="col-md-12 form-group p_star">
+                            <select class="country_select">
+                                <option value="1">Country</option>
+                                <option value="2">Country</option>
+                                <option value="4">Country</option>
+                            </select>
+                        </div> --}}
+                        <div class="col-md-12 form-group p_star">
+                            <input type="text" class="form-control" id="add1" name="add1"
+                                placeholder="Address line 01" />
+
+                        </div>
+                        <div class="col-md-12 form-group p_star">
+                            <input type="text" class="form-control" id="add2" name="add2"
+                                placeholder="Address line 02" />
+
+                        </div>
+                        <div class="col-md-12 form-group p_star">
+                            <input type="text" class="form-control" id="city" name="city" placeholder="Town/City" />
+
+                        </div>
+                        <div class="col-md-6 form-group p_star">
+                            <input type="text" class="form-control" id="district" name="district"
+                                placeholder="District" />
+
+                        </div>
+                        <div class="col-md-6 form-group p_star">
+                            <input type="text" class="form-control" id="state" name="state" placeholder="State" />
+
+                        </div>
+                        {{!-- <div class="col-md-12 form-group p_star">
+                            <select class="country_select">
+                                <option value="1">District</option>
+                                <option value="2">District</option>
+                                <option value="4">District</option>
+                            </select>
+                        </div> --}}
+                        <div class="col-md-12 form-group">
+                            <input type="number" class="form-control" id="zip" name="zip" placeholder="Postcode/ZIP" />
+                        </div>
+                        {{!-- <div class="col-md-12 form-group">
+                            <div class="creat_account">
+                                <input type="checkbox" id="f-option2" name="selector" />
+                                <label for="f-option2">Create an account?</label>
+                            </div>
+                        </div> --}}
+                        <div class="col-md-12 form-group">
+                            {{!-- <div class="creat_account">
+                                <h3>Shipping Details</h3>
+                                <input type="checkbox" id="f-option3" name="selector" />
+                                <label for="f-option3">Ship to a different address?</label>
+                            </div> --}}
+                            <textarea class="form-control" name="message" id="message" rows="1"
+                                placeholder="Order Notes"></textarea>
+                        </div>
+                        <input type="text" name="userId" id="" value="{{user._id}}" hidden>
+
+                    </form>
+                </div>
+                <div class="col-lg-4">
+                    <div class="order_box">
+                        <h2>Your Order</h2>
+                        <ul class="list">
+                            {{!-- <li>
+                                <a href="#">Product
+                                    <span>Total</span>
+                                </a>
+                            </li> --}}
+                            {{!-- <li>
+                                <a href="#">Fresh Blackberry
+                                    <span class="middle">x 02</span>
+                                    <span class="last">$720.00</span>
+                                </a>
+                            </li> --}}
+                            {{!-- <li>
+                                <a href="#">Fresh Tomatoes
+                                    <span class="middle">x 02</span>
+                                    <span class="last">$720.00</span>
+                                </a>
+                            </li> --}}
+                            {{!-- <li>
+                                <a href="#">Fresh Brocoli
+                                    <span class="middle">x 02</span>
+                                    <span class="last">$720.00</span>
+                                </a>
+                            </li> --}}
+                        </ul>
+                        <ul class="list list_2">
+                            {{!-- <li>
+                                <a href="#">Subtotal
+                                    <span>$2160.00</span>
+                                </a>
+                            </li> --}}
+                            {{!-- <li>
+                                <a href="#">Shipping
+                                    <span>Flat rate: $50.00</span>
+                                </a>
+                            </li> --}}
+                            <li>
+                                <a href="#">Total
+                                    <span>{{total}}</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="payment_item">
+                            <div class="radion_btn ">
+                                <input type="radio" id="f-option5" name="paymentMethod" value="COD"
+                                    form="checkout-form" />
+                                <label for="f-option5">COD</label>
+                                <div class="check"></div>
+                            </div>
+                            <p>
+                                Please select online payment methods for contactless delivery
+                            </p>
+                        </div>
+                        <div class="payment_item active">
+                            <div class="radion_btn">
+                                <input type="radio" id="f-option6" name="paymentMethod" value="online"
+                                    form="checkout-form" />
+                                <label for="f-option6">Razorpay </label>
+                                <img src="assets/img/product/single-product/card.jpg" alt="" />
+                                <div class="check"></div>
+                            </div>
+                            <p>
+                                Please send a check to Store Name, Store Street, Store Town,
+                                Store State / County, Store Postcode.
+                            </p>
+                        </div>
+                        <div class="payment_item active">
+                            <div class="radion_btn">
+                                <input type="radio" id="f-option7" name="paymentMethod" value="paypal"
+                                    form="checkout-form" />
+                                <label for="f-option7">Paypal </label>
+                                <img src="assets/img/product/single-product/card.jpg" alt="" />
+                                <div class="check"></div>
+                            </div>
+                            <p>
+                                Please send a check to Store Name, Store Street, Store Town,
+                                Store State / County, Store Postcode.
+                            </p>
+                        </div>
+                        <div class="creat_account">
+                            <input type="checkbox" id="f-option4" name="selector" />
+                            <label for="f-option4">I’ve read and accept the </label>
+                            <a href="#">terms & conditions*</a>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary  " form="checkout-form" type="submit" data-toggle="modal"
+                                data-target="#exampleModalCenter">Place Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{!--
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script> --}}
+    <script>
+
+        $("#checkout-form").submit((e) => {
+            e.preventDefault()
+            $.ajax({
+                url: '/place-order',
+                method: 'post',
+                data: $('#checkout-form').serialize(),
+                success: (response) => {
+                    if (response.codSuccess) {
+
+                        alert('Order Placed')
+                    } else if (response.onlineSuccess) {
+                        razorpayPayment(response.response)
+                    } else {
+
+                        for (let i = 0; i < response.links.length; i++) {
+                            if (response.links[i].rel === 'approval_url') {
+                                location.href = (response.links[i].href);
+                            }
+                        }
+                    }
+                }
+            })
+
+        })
+
+        function razorpayPayment(order) {
+            console.log(order.amount)
+            var options = {
+                "key": "rzp_test_c7Of720IRAmiHx", // Enter the Key ID generated from the Dashboard
+                "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                "currency": "INR",
+                "name": "Furno",
+                "description": "Test Transaction",
+                "image": "https://example.com/your_logo",
+                "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                "handler": function (response) {
+                    verifyPayment(response, order)
+                },
+                "prefill": {
+                    "name": "Gaurav Kumar",
+                    "email": "gaurav.kumar@example.com",
+                    "contact": "9999999999"
+                },
+                "notes": {
+                    "address": "Razorpay Corporate Office"
+                },
+                "theme": {
+                    "color": "#3399cc"
+                }
+            };
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+
+        }
+
+
+    </script>
+
+    <script>
+        function verifyPayment(payment, order) {
+            $.ajax({
+                url: '/verify-payment',
+                data: {
+                    payment,
+                    order
+                },
+                method: 'post',
+                success: (response) => {
+                    if (response.status) {
+                        alert('payment successful')
+                    } else {
+                        alert('payment failed')
+                    }
+                }
+            })
+        }
+    </script>
+
+
+
+
+
+    <!-- Button trigger modal -->
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{#each userAddresses}}
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            Select
+                        </label>
+                    </div>
+
+                    <div class="card" style="width: 33em;">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">{{this.addresses.fName}}
+                                {{this.addresses.lName}}
+                            </h6>
+                            <p>Mobile : {{this.addresses.number}}</p>
+                            <p>Email : {{this.addresses.email}},</p>
+                            <p>Add :
+                                {{this.addresses.add1}},{{this.addresses.add2}},{{this.addresses.city}},{{this.addresses.district}},{{this.addresses.state}}
+                            </p>
+                            <p>Pincode :{{this.addresses.zip}}</p>
+                            <div class="d-flex justify-content-around"></div>
+                        </div>
+                    </div>
+                    <br>
+                    {{/each}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Select</button>
+                </div>
+            </div>
+        </div>
+    </div>
