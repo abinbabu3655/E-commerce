@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-// const fileUpload = require('express-fileupload')
+const fileUpload = require('express-fileupload')
 const session = require('express-session')
 const db = require('./config/connection')
 
