@@ -1,11 +1,11 @@
 
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var fileUpload = require('express-fileupload')
-var session = require('express-session')
-var db = require('./config/connection')
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const fileUpload = require('express-fileupload')
+const session = require('express-session')
+const db = require('./config/connection')
 
 
 db.connect((err) => {
@@ -14,12 +14,12 @@ db.connect((err) => {
 })
 
 
-var adminRouter = require('./routes/admin');
-var usersRouter = require('./routes/users');
+const adminRouter = require('./routes/admin');
+const usersRouter = require('./routes/users');
 // const hbs = require('express-hbs/lib/hbs');
-var hbs = require('express-handlebars')
+const hbs = require('express-handlebars')
 
-var app = express();
+const app = express();
 
 const HBS = hbs.create({});
 // view engine setup
