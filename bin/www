@@ -5,8 +5,15 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('first-project:server');
+var debug = require('debug')('E-commerce:server');
 var http = require('http');
+
+
+
+
+// var app = require('../app');
+// var debug = require('debug')('first-project:server');
+// var http = require('http');
 
 /**
  * Get port from environment and store in Express.
