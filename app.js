@@ -77,9 +77,13 @@ app.use('/', usersRouter);
 app.use('/admin', adminRouter);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
-});
+// app.use(function (req, res, next) {
+//   next(createError(404));
+// });
+app.get("*",(req,res)=>{
+  res.render('users/404',{userUi:true, user: req.session.user}) 
+  });
+
 
 // error handler
 app.use(function (err, req, res, next) {

@@ -51,12 +51,12 @@
                   </g>
                 </svg>
               </span>
-              <span class="app-brand-text demo text-body fw-bolder">Furn</span>
+              <span class=" demo text-body fw-bolder" style="font-size:2em ;">Aranoz.</span>
             </a>
           </div>
           <!-- /Logo -->
-          <h4 class="mb-2">Welcome Admin</h4>
-          <p class="mb-4">Please sign-in to manage your E-commerse Website</p>
+          <h4 class="mt-4">Welcome Admin</h4>
+          <p >Please sign-in to manage your E-commerse Website</p>
            {{#if loginErr}}  
           <p class="text-danger">{{loginErr}}</p>
           {{/if}}
@@ -87,10 +87,6 @@
               <p id="passwordErr" class="text-danger"></p>
             </div>
             <div class="mb-3">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="remember-me" />
-                <label class="form-check-label" for="remember-me"> Remember Me </label>
-              </div>
             </div>
             <div class="mb-3">
               <button class="btn btn-primary d-grid w-100" type="submit" onclick="return validation()">Sign in</button>

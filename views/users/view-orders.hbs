@@ -17,6 +17,7 @@
           </thead>
           <tbody>
             {{#each orders}}
+            {{#notEquals this.status 'pending'}}
             <tr>
 
               <td>
@@ -55,6 +56,7 @@
                   <a class="btn_1 checkout_btn_1" href="/view-order-products{{this._id}}">View Products</a>
                 </div>
               </td>
+              
               <td>
                 <div class="d-flex justify-content-center pb-1">
                   {{#notEquals this.status 'cancelled'}}
@@ -64,6 +66,7 @@
                 
               </td>
             </tr>
+            {{/notEquals}}
             {{/each}}
           </tbody>
         </table>

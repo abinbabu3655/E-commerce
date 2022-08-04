@@ -14,6 +14,7 @@ module.exports = {
       subCategory: product.subCategory,
       brand: product.brand,
       price: parseInt(product.price),
+      MRP: parseInt(product.price),
       stock: product.stock,
       description: product.description
     }
@@ -48,7 +49,7 @@ module.exports = {
         $set: {
           productName: productDetails.productName,
           Category: productDetails.Category,
-          price: productDetails.price,
+          MRP: productDetails.price,
           stock: productDetails.stock,
           subCategory: productDetails.subCategory,
           brand: productDetails.brand,
@@ -92,7 +93,7 @@ module.exports = {
   },
   getAllOrders: () => {
     return new Promise(async (resolve, reject) => {
-      let orders = await db.get().collection(collection.ORDER_COLLECTION).find().toArray()
+      let orders = await db.get().collection(collection.ORDER_COLLECTION).find({ status: { $nin: ['pending'] } }).sort({ time: -1 }).toArray()
       resolve(orders)
     })
 
@@ -218,54 +219,393 @@ module.exports = {
         }
         ,
         {
-          $replaceRoot: 
-          { newRoot: { $mergeObjects: [{ $arrayElemAt: ["$category", 0] }, "$$ROOT"] } }
+          $replaceRoot:
+            { newRoot: { $mergeObjects: [{ $arrayElemAt: ["$category", 0] }, "$$ROOT"] } }
         },
-        { $project: { fromItems: 0 ,category:0} }
+        { $project: { fromItems: 0, category: 0 } }
 
       ]).toArray()
       resolve(products)
     })
   },
-  applyProductOffer:(proId,offerId)=>{
-    return new Promise (async (resolve,reject)=>{
-      let offer=await db.get().collection(collection.OFFER_COLLECCTION).findOne({_id:objectId(offerId)})
-        let product = await db.get().collection(collection.PRODUCT_COLLECTION).findOne({_id:objectId(proId)})
-        let dPercentage=offer.dPercentage
-        let price = parseInt( product.price)
-        await db.get().collection(collection.PRODUCT_COLLECTION).updateOne({_id:objectId(proId)},{
-          $set:{
-            MRP:price,
-            price:parseInt((price-((price*dPercentage)/100))),
-            dPercentage:dPercentage
-          }
-        })
+  applyProductOffer: (proId, offerId) => {
+    return new Promise(async (resolve, reject) => {
+      let offer = await db.get().collection(collection.OFFER_COLLECCTION).findOne({ _id: objectId(offerId) })
+      let product = await db.get().collection(collection.PRODUCT_COLLECTION).findOne({ _id: objectId(proId) })
+      let dPercentage = offer.dPercentage
+      let price = parseInt(product.price)
+      await db.get().collection(collection.PRODUCT_COLLECTION).updateOne({ _id: objectId(proId) }, {
+        $set: {
+          price: parseInt((price - ((price * dPercentage) / 100))),
+          dPercentage: dPercentage,
+          offerId: offer._id
+        }
+      })
 
-        resolve(response)
+      resolve(response)
     })
   },
-  removeOffer:(proId)=>{
-    return new Promise ((resolve,reject)=>{
-      db.get().collection(collection.PRODUCT_COLLECTION).updateOne({proId},{
-        $unset:{dPrice}
+  removeOffer: (proId) => {
+    return new Promise(async (resolve, reject) => {
+      let product = await db.get().collection(collection.PRODUCT_COLLECTION).findOne({ _id: objectId(proId) })
+      db.get().collection(collection.PRODUCT_COLLECTION).updateOne({ _id: objectId(proId) }, {
+        $set: {
+          price: product.MRP
+        }, $unset: {
+          'dPercentage': '',
+          'offerId': ''
+        }
+      }
+      )
+    })
+  },
+  addCoupon: (coupon) => {
+    return new Promise((resolve, reject) => {
+      db.get().collection(collection.COUPON_COLLECTION).insertOne(coupon)
+      resolve(response)
+    })
+  },
+  getCoupons: () => {
+    return new Promise(async (resolve, reject) => {
+      let coupons = await db.get().collection(collection.COUPON_COLLECTION).find().toArray()
+      resolve(coupons)
+    })
+  },
+  deleteCoupon: (couponId) => {
+    return new Promise((resolve, reject) => {
+      db.get().collection(collection.COUPON_COLLECTION).deleteOne({ _id: objectId(couponId) }).then((response) => {
+        resolve(response)
       })
     })
-  }
+  },
+  getCatProducts: (catId) => {
+    return new Promise(async (resolve, reject) => {
+      let catProducts = await db.get().collection(collection.PRODUCT_COLLECTION).find({ Category: objectId(catId) }).toArray()
+      resolve(catProducts)
+    })
+  },
+  //------------------add category offer----------------------
+  applyCategoryOffer: (catOfferDetails) => {
+    console.log(catOfferDetails);
+    return new Promise(async (resolve, reject) => {
+      products = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
+        {
+          $match: { Category: objectId(catOfferDetails.catId) }
+        },
+        {
+          $set: {
+            price: { $subtract: ['$price', ({ $divide: [({ $multiply: ['$price', parseInt(catOfferDetails.cdpercentage)] }), 100] })] },
+            offerStatus: true,
+            catOfferdpercentage: catOfferDetails.cdpercentage
 
-  // ,
-  // getProduct:(proId)=>{
-  //     let response={}
-  //     return new Promise(async (resolve,reject)=>{
-  //         let product= await db.get().collection(collection.PRODUCT_COLLECTION).find({_id:objectId(proId)})
-  //         let categoryId=product.category
-  //         console.log(product);
-  //         console.log('kkkkkkkkkkkkkkkkkkkkkkk');
-  //         console.log(categoryId);
-  //        let category=await db.get().collection(collection.CATEGORY_COLLECTION).find({category:categoryId})
-  //        console.log(category);
-  //        response.product=product
-  //        response.category=category
-  //         resolve(response)
-  //     })
-  // }
+          }
+        }
+      ]).toArray()
+
+      await products.map(async (products) => {
+
+        await db.get().collection(collection.PRODUCT_COLLECTION).updateOne(
+          { _id: ObjectId(products._id) },
+          {
+            $set: {
+              dPercentage: products.catOfferdpercentage,
+              price: parseInt(products.price),
+              offerId: objectId()
+              // offer_start: data.offer_start,
+              // offer_end: data.offer_end,
+              // offer_status: data.offer_status,
+            },
+          }
+        );
+      });
+      await db.get().collection(collection.CATEGORY_COLLECTION).updateOne(
+        { _id: objectId(catOfferDetails.catId) },
+        {
+          $set: {
+            offerId: objectId()
+          }
+        }
+      )
+      resolve()
+
+    })
+
+  },
+  removeCategoryOffer: (catOfferDetails) => {
+    console.log(catOfferDetails);
+    return new Promise(async (resolve, reject) => {
+      products = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
+        {
+          $match: { Category: objectId(catOfferDetails.catId) }
+        },
+        {
+          $set: {
+            price: '$MRP',
+          }
+        }
+      ]).toArray()
+      console.log(products);
+
+      await products.map(async (products) => {
+
+        await db.get().collection(collection.PRODUCT_COLLECTION).updateOne(
+          { _id: ObjectId(products._id) },
+          {
+            $set: {
+              price: parseInt(products.price),
+            },
+            $unset: {
+              'dPercentage': '',
+              'offerId': ''
+            },
+          }
+        );
+      });
+      await db.get().collection(collection.CATEGORY_COLLECTION).updateOne(
+        { _id: objectId(catOfferDetails.catId) },
+        {
+          $unset: {
+            offerId: objectId()
+          }
+        }
+      )
+      resolve()
+
+    })
+
+  },
+  getsalesDetails: (sDate, eDate) => {
+
+    return new Promise(async (resolve, reject) => {
+      let orders = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+        {
+          $match: {
+            date: { $gte: sDate, $lte: eDate },
+            status: { $nin: ['cancelled', 'pending'] }
+          }
+        }
+      ]).toArray()
+      resolve(orders)
+    })
+  },
+  getSalesTotal: (sDate, eDate) => {
+    return new Promise(async (resolve, reject) => {
+      let total = 0
+      let totalAmount = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+        {
+          $match: {
+            date: { $gte: sDate, $lte: eDate }
+          }
+        },
+        {
+          $group: {
+            _id: null, total: { $sum: "$total" }
+          }
+        }
+      ]).toArray()
+      if (totalAmount[0]) {
+        total = totalAmount[0].total
+      } else {
+        total = parseInt(total)
+      }
+      resolve(total)
+    })
+  },
+  getCodSalesCount: (sDate, eDate) => {
+    return new Promise(async (resolve, reject) => {
+
+      let salesCount = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+        {
+          $match: {
+            "status": { $nin: ['cancelled', 'pending'] },
+            date: { $gte: sDate, $lte: eDate },
+            paymentMethod: 'COD'
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: '$total' },
+            count: { $sum: 1 },
+          }
+        }
+      ]).toArray()
+      if (salesCount[0]) {
+        resolve(salesCount[0])
+      } else {
+        salesCount = {
+          _id: null,
+          total: 0,
+          count: 0
+        }
+        resolve(salesCount)
+      }
+    })
+  },
+  getRazorpaySalesCount: (sDate, eDate) => {
+    return new Promise(async (resolve, reject) => {
+
+      let salesCount = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+        {
+          $match: {
+            "status": { $nin: ['cancelled', 'pending'] },
+            date: { $gte: sDate, $lte: eDate },
+            paymentMethod: 'razorpay'
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: '$total' },
+            count: { $sum: 1 },
+          }
+        }
+      ]).toArray()
+      if (salesCount[0]) {
+        resolve(salesCount[0])
+      } else {
+        salesCount = {
+          _id: null,
+          total: 0,
+          count: 0
+        }
+        resolve(salesCount)
+      }
+    })
+  },
+  getPaypalSalesCount: (sDate, eDate) => {
+    return new Promise(async (resolve, reject) => {
+
+      let salesCount = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+        {
+          $match: {
+            "status": { $nin: ['cancelled', 'pending'] },
+            date: { $gte: sDate, $lte: eDate },
+            paymentMethod: 'paypal'
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: '$total' },
+            count: { $sum: 1 },
+          }
+        }
+      ]).toArray()
+      if (salesCount[0]) {
+        resolve(salesCount[0])
+      } else {
+        salesCount = {
+          _id: null,
+          total: 0,
+          count: 0
+        }
+        resolve(salesCount)
+      }
+    })
+  },
+  getTotalSalesCount: (sDate, eDate) => {
+    return new Promise(async (resolve, reject) => {
+
+      let salesCount = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+        {
+          $match: {
+            "status": { $nin: ['cancelled', 'pending'] },
+            date: { $gte: sDate, $lte: eDate },
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: '$total' },
+            count: { $sum: 1 },
+          }
+        }
+      ]).toArray()
+      if (salesCount[0]) {
+        resolve(salesCount[0])
+      } else {
+        salesCount = {
+          _id: null,
+          total: 0,
+          count: 0
+        }
+        resolve(salesCount)
+      }
+    })
+  },
+  getMonthlyReport: () => {
+    return new Promise(async (resolve, reject) => {
+      let curentdate = new Date()
+      let year = curentdate.getFullYear()
+      let monthreport = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+        {
+          $project: {
+            year: {
+              $year: '$time'
+            },
+            total: 1,
+            time: 1
+          }
+        }, {
+          $match: {
+            year: year, "status": { $nin: ['cancelled', 'pending'] }
+          }
+        }, {
+          $project: {
+            total: 1,
+            year: 1,
+            month: {
+              $month: '$time'
+            }
+          }
+        }, {
+          $group: {
+            _id: '$month',
+            total: {
+              $sum: '$total'
+            }
+          }
+        }
+      ]).sort({ _id: 1 }).toArray()
+      resolve(monthreport)
+
+    })
+  },
+  getReportPayment: () => {
+    let date= new Date()
+    let month=(date.getMonth())+1
+    return new Promise(async (resolve, reject) => {
+        let report = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+            {
+                $project: {
+                    month:{$month:"$time"},
+                    total: '$total',
+                    paymentMethod: '$paymentMethod',
+                    status:1
+                }
+            },
+            {
+              $match:{
+                month: { $eq:month},
+                status: { $nin: ['cancelled', 'pending'] }
+              }
+            },
+             {
+                $group: {
+                    _id: "$paymentMethod",
+                    total: {
+                        $sum: "$total"
+                    }
+                }
+            }
+        ]).sort({_id: -1}).toArray()
+        resolve(report)
+        console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+        console.log(report);
+
+    })
+},
+
+
 }

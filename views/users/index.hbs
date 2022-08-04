@@ -372,16 +372,23 @@
                                 onclick="window.location='http://localhost:3000/single-product{{this._id}}';">
                             <div class="single_product_text">
                                 <h4  onclick="window.location='http://localhost:3000/';">{{this.productName}}</h4>
-                                {{#if this.dPrice}}
+                                 {{#if this.offerId}}
                                 <h3> <span class="badge badge-pill badge-light">{{this.dPercentage}}% Off</span>
-                                    <s> Rs {{this.price}}</s>
+                                    <s> Rs {{this.MRP}}</s>
                                 </h3>
-                                <h3>Rs {{this.dPrice}}</h3>
+                                <h3>Rs {{this.price}}</h3> 
                                 {{else}}
+                                
+                                 <h5>Available: {{this.stock}} nos</h5>
                                 <h3>Rs {{this.price}}</h3>
+                                
                                 {{/if}}
+                                {{#if ../user}}
                                 <button type="button" class="btn btn-primary btn-sm" onclick="addToCart('{{this._id}}')">+ Add to cart</button>
                                 {{!-- <a href="/add-to-cart/{{this._id}}" class="add_cart">+ add to cart<i class="ti-heart"></i></a> --}}
+                                {{else}}
+                                <button type="button" class="btn btn-primary btn-sm" onclick="location.href='http://localhost:3000/login'">+ Add to cart</button>
+                                {{/if}}
                             </div>
                         </div>
                     {{/each}}

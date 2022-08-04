@@ -1,6 +1,4 @@
-<!--::header part start::-->
 
-<!-- Header part end-->
 
 <!--================Home Banner Area =================-->
 <!-- breadcrumb start-->
@@ -34,54 +32,12 @@
                             <ul class="list">
                                 {{#each category}}
                                 <li>
-                                    <a href="#">{{this.categoryName}}</a>
+                                    <a href="/category-views{{this._id}}">{{this.categoryName}}</a>
                                 </li>
                                 {{/each}}
                             </ul>
                         </div>
                     </aside>
-
-                    {{!-- <aside class="left_widgets p_filter_widgets">
-                        <div class="l_w_title">
-                            <h3>Product filters</h3>
-                        </div>
-                        <div class="widgets_inner">
-                            <ul class="list">
-                                <li>
-                                    <a href="#">Apple</a>
-                                </li>
-                                <li>
-                                    <a href="#">Asus</a>
-                                </li>
-                                <li class="active">
-                                    <a href="#">Gionee</a>
-                                </li>
-                                <li>
-                                    <a href="#">Micromax</a>
-                                </li>
-                                <li>
-                                    <a href="#">Samsung</a>
-                                </li>
-                            </ul>
-                            <ul class="list">
-                                <li>
-                                    <a href="#">Apple</a>
-                                </li>
-                                <li>
-                                    <a href="#">Asus</a>
-                                </li>
-                                <li class="active">
-                                    <a href="#">Gionee</a>
-                                </li>
-                                <li>
-                                    <a href="#">Micromax</a>
-                                </li>
-                                <li>
-                                    <a href="#">Samsung</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </aside> --}}
 
                     <aside class="left_widgets p_filter_widgets">
                         <div class="l_w_title">
@@ -134,40 +90,7 @@
             <div class="col-lg-9">
                 <div class="row">
                     <div class="col-lg-12">
-                        {{!-- <div class="product_top_bar d-flex justify-content-between align-items-center">
-                            <div class="single_product_menu">
-                                <p><span>10000 </span> Prodict Found</p>
-                            </div> --}}
-                            {{!-- <div class="single_product_menu d-flex">
-                                <h5>sort </h5>
-                                <select>
-                                    <option data-display="Select">name</option>
-                                    <option value="1">price</option>
-                                    <option value="2">product</option>
-                                </select>
-                            </div>
-                            <div class="single_product_menu d-flex">
-                                <h5>show :</h5>
-                                <div class="top_pageniation">
-                                    <ul>
-                                        <li>1</li>
-                                        <li>2</li>
-                                        <li>3</li>
-                                    </ul>
-                                </div>
-                            </div> --}}
-                            {{!-- <div class="single_product_menu d-flex">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="search"
-                                        aria-describedby="inputGroupPrepend">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="inputGroupPrepend"><i
-                                                class="ti-search"></i></span>
-                                    </div>
-                                </div>
-                            </div> --}}
-                            {{!--
-                        </div> --}}
+
                     </div>
                 </div>
 
@@ -179,21 +102,23 @@
                                 onclick="window.location='http://localhost:3000/single-product{{this._id}}';">
                             <div class="single_product_text">
                                 <h4 onclick="window.location='http://localhost:3000/';">{{this.productName}}</h4>
-                                {{#if this.MRP}}
+                                {{#if this.offerId}}
                                 <h3> <span class="badge badge-pill badge-light">{{this.dPercentage}}% Off</span>
                                     <s> Rs {{this.MRP}}</s>
                                 </h3>
-                                <h3>Rs {{this.Price}}</h3>
+                                <h3>Rs {{this.price}}</h3>
                                 {{else}}
-                                
-                                <h3>{{this.price}}</h3>
+                                <h5>Available: {{this.stock}} nos</h5>
+                                <h3>Rs {{this.price}}</h3>
                                 
                                 {{/if}}
 
-                                <button type="button" class="btn btn-primary btn-sm"
-                                    onclick="addToCart('{{this._id}}')">+ Add to cart</button>
-                                {{!-- <a href="/add-to-cart/{{this._id}}" class="add_cart">+ add to cart<i
-                                        class="ti-heart"></i></a> --}}
+                                 {{#if ../user}}
+                                <button type="button" class="btn btn-primary btn-sm" onclick="addToCart('{{this._id}}')">+ Add to cart</button>
+                                {{!-- <a href="/add-to-cart/{{this._id}}" class="add_cart">+ add to cart<i class="ti-heart"></i></a> --}}
+                                {{else}}
+                                <button type="button" class="btn btn-primary btn-sm" onclick="location.href='http://localhost:3000/login'">+ Add to cart</button>
+                                {{/if}}
                             </div>
                         </div>
                     </div>
@@ -225,7 +150,3 @@
 </section>
 <!--================End Category Product Area =================-->
 
-
-<script>
-
-</script>
